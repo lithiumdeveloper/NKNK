@@ -1,0 +1,44 @@
+#!$HOMEDIRECTORY/venv/bin/python
+from importlib import reload
+import sys
+import os
+import subprocess
+
+shell="zsh"
+def importnk():
+    global nknk
+    import nknk
+    if not nknk.SUPRESSLOGS:
+        print("Using lnknk b1.0")
+def run():
+    nknk.initialize()
+    nknk.cmdline()
+arguments = sys.argv[1:]
+if arguments:
+    command = ' '.join(arguments)
+    subprocess.run(command, shell=True, executable=shell)
+    #os.system(command)
+else:
+    try:
+        importnk()
+        run()
+    except Exception as e:
+        print("NK: Fatal Error: ",e, "Using backup shell: ",shell)
+        try:
+            os.system(shell)
+        except Exception as e:
+            print("""NK: Aww shit you fucked up, your backup shell could not be found
+                  Using the Bourn Shell(sh)...
+                  """)
+            try:
+                os.system(shell)
+            except Exception as e:
+                print("Did you rm rf / or something??? Bourn shell could not run.\nyour computer is kinda fucked, if you have no other shell installed then your computer is unrepairable\nerror: ",e)
+    print("exiting...")
+    while True:
+        inp = input("Restart NKNK? y/lf: ")
+        if inp == "y":
+            reload(nknk)
+            run()
+        else:
+            quit()
